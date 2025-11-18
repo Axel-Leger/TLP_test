@@ -48,4 +48,21 @@ describe('Todo API', () => {
     expect(res.status).toBe(400);
     expect(res.body).toHaveProperty('error');
   });
+
+
+  it("GET /todos/stats devuelve los totales", async () => {
+  // Creamos datos de prueba
+  await request(app).post("/todos").send({ title: "A" });
+  const b = await request(app).post("/todos").send({ title: "B" });
+  await request(app).post("/todos").send({ title: "C" });
+
+  // Marcamos uno como completado
+  await request(app).patch(`/todos/${b.body.id}/toggle`);
+
+  // Consultamos stats
+  const res = await request(app).get("/todos/stats");
+
+  expect(res.status).toBe(200);
+  expect(res.body).toEqual({ total: 3, completed: 1, pending: 2 });
+});
 });
