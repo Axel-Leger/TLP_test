@@ -39,5 +39,16 @@ export function buildTodoRouter(service: TodoService): Router {
     }
   });
 
+  router.delete('/', (_req, res) => {
+    service.clear();
+    res.status(204).send();
+  });
+
+
+   router.get("/stats", (_req, res) => {
+    const stats = service.stats();
+    res.status(200).json(stats);
+  });
+
   return router;
 }
